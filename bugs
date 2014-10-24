@@ -1,0 +1,44 @@
+
+
+console.log("Hey QA testers, add this into your bug list and you get extra credit :)");
+
+function ViewModel() {
+    var self = this;
+
+    self.acceptStatus = ko.observable(null);
+    self.past = ko.observable();
+    self.future = ko.observable();
+
+    self.checkDates = function () {
+        self.acceptStatus(self.checkStartDate() && self.checkEndDate());
+        setTimeout(function () {
+            document.querySelector(".alert").classList.remove("accept", "danger");
+            self.acceptStatus(null);
+        }, 1500);
+    };
+
+    self.checkStartDate = function () {
+        var date = self.past(),
+            parsed = Date.parse(date);
+
+        // Valid format, invalid date
+        if (/\d\d\/\d\d\/\d\d\d\d/.test(date) && !parsed) {
+            return true;
+        }
+
+        return Date.now() > parsed;
+    };
+
+    self.checkEndDate = function () {
+        var date = self.future(),
+            parsed = Date.parse(date);
+
+        if (/[a-z]+/i.test(date)) {
+            return true;
+        }
+
+        return Date.now() < parsed;
+    }
+}
+
+ko.applyBindings(new ViewModel);
